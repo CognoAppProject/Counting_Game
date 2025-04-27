@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Counting Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Instruction Modal -->
+    <div id="instruction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Welcome to Counting Carnival! 🎉</h2>
+            <p>How to play:</p>
+            <ol>
+                <li>Look at the items in the box.</li>
+                <li>Count the total number.</li>
+                <li>Select the correct number.</li>
+                <li>Click "Check Answer".</li>
+                <li>Move to the next level if correct!</li>
+            </ol>
+            <button id="start-game-btn" class="primary-btn">Start Game</button>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="game-container">
+        <h1>Counting Carnival 🎡</h1>
+        <div id="item-container"></div>
+        <div id="options-container"></div>
+        <p id="selected-number"></p>
+        <div id="button-container">
+            <button id="next-level-btn" class="primary-btn hidden">Next Level</button>
+            <button id="restart-btn" class="primary-btn hidden">Restart</button>
+        </div>
+        <p id="result"></p>
+        <p id="level-info">Level: <span id="level-counter">1</span></p>
+        <p id="score-info"><span id="score-counter"></span></p>
+        <p id="time-info">Time: <span id="time-counter">0s</span></p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
