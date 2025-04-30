@@ -7,19 +7,17 @@ let gameEnded = false;
 
 // Levels
 const levels = [
-    ['🍨'],                 //1
-    ['🍋', '🥭', '🎪'],        //3    
-    ['🥘', '🎭'],              //2
-    ['🍛','🍉', '🎡', '🥝', '🤹','🥬', '🍮', '🍎'],  //8    
-    ['🍒', '🍊', '🥕', '🥔', '🎪', '🥑'],  //6
-    ['🌽', '🍢', '🍡','🍨', '🍦'],   //5     
-    ['🍧','🤹', '🎢', '🍠', '🥖','🍋', '🥭', '🎪','🍨'], //9        
-    ['🍉', '🎡', '🥝', '🤹','🥬', '🍮', '🍎'], //7       
-    ['🤹', '🎢', '🍠', '🥖']  , //4
-    ['🥘', '🎭','🌽', '🍢', '🍡','🍨', '🍦']//7
-
+    ['🍨'],                 
+    ['🍋', '🥭', '🎪'],        
+    ['🥘', '🎭'],              
+    ['🍛','🍉', '🎡', '🥝', '🤹','🥬', '🍮', '🍎'],  
+    ['🍒', '🍊', '🥕', '🥔', '🎪', '🥑'],  
+    ['🌽', '🍢', '🍡','🍨', '🍦'],   
+    ['🍧','🤹', '🎢', '🍠', '🥖','🍋', '🥭', '🎪','🍨'],        
+    ['🍉', '🎡', '🥝', '🤹','🥬', '🍮', '🍎'],       
+    ['🤹', '🎢', '🍠', '🥖'],  
+    ['🥘', '🎭','🌽', '🍢', '🍡','🍨', '🍦']
 ];
-
 
 // Elements
 const instructionModal = document.getElementById('instruction-modal');
@@ -33,24 +31,23 @@ const nextLevelBtn = document.getElementById('next-level-btn');
 const restartBtn = document.getElementById('restart-btn');
 
 // Show instructions on load
-window.onload = function() {
+window.onload = function () {
     instructionModal.style.display = "flex";
 };
 
 // Start game
-startGameBtn.onclick = function() {
+startGameBtn.onclick = function () {
     instructionModal.style.display = "none";
-    score = 0; // Reset score
-    currentLevel = 1; // Start at level 1
-    gameEnded = false; // Game hasn't ended yet
+    score = 0;
+    currentLevel = 1;
+    gameEnded = false;
     startNewLevel();
 };
 
 // Start level
 function startNewLevel() {
-    if (gameEnded) return; // Prevent starting new levels after the game ends
+    if (gameEnded) return;
 
-    // Set the timer only if it's the first level
     if (currentLevel === 1) {
         startTime = new Date().getTime();
         timerInterval = setInterval(updateTimer, 1000);
@@ -82,9 +79,9 @@ function startNewLevel() {
     }
 }
 
-// Check answer (Automatically progresses if correct)
+// Check answer
 function checkAnswer(selected) {
-    if (gameEnded) return; // Prevent further interaction after game ends
+    if (gameEnded) return;
 
     if (selected === correctAnswer) {
         score++;
@@ -99,7 +96,7 @@ function checkAnswer(selected) {
 // Next level
 nextLevelBtn.addEventListener('click', () => {
     if (currentLevel === levels.length) {
-        gameOver(true); // Game finished, show score
+        gameOver(true);
     } else {
         currentLevel++;
         startNewLevel();
@@ -108,20 +105,16 @@ nextLevelBtn.addEventListener('click', () => {
 
 // Timer update
 function updateTimer() {
-    if (gameEnded) return; // Stop updating time after game ends
+    if (gameEnded) return;
     let elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000);
     timeCounter.textContent = elapsedTime + 's';
 }
 
 // Game over logic
 function gameOver(completed = false) {
-    gameEnded = true; // Mark the game as ended
-
-    clearInterval(timerInterval); // Stop the timer
-
-    const elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000); // Calculate final time
-
-    // Show final message with score and time
+    gameEnded = true;
+    clearInterval(timerInterval);
+    const elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000);
     const reason = completed ? "You completed the game!" : "You selected the wrong count!";
     const finalMessage = `
         <h2>${reason}</h2>
@@ -129,7 +122,6 @@ function gameOver(completed = false) {
         <p>Time: ${elapsedTime}s</p>
     `;
 
-    // Display the final message in a modal window
     const finalMessageModal = document.createElement('div');
     finalMessageModal.classList.add('modal');
     finalMessageModal.innerHTML = `
@@ -147,9 +139,14 @@ function gameOver(completed = false) {
     closeBtn.onclick = () => finalMessageModal.remove();
     restartGameBtn.onclick = () => {
         finalMessageModal.remove();
-        startGameBtn.click(); // Restart the game by clicking the start button
+        startGameBtn.click();
     };
 
-    nextLevelBtn.classList.add('hidden'); // Hide the "Next Level" button when the game is over
-    restartBtn.classList.remove('hidden'); // Show the "Restart" button when the game ends
+    nextLevelBtn.classList.add('hidden');
+    restartBtn.classList.remove('hidden');
+
+    // 🔗 Send result to Android
+    if (typeof Android !== "undefined" && Android.submitResult) {
+        Android.submitResult("Counting_Game", Math.min(score, 10), elapsedTime);
+    }
 }
