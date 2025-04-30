@@ -146,7 +146,7 @@ function gameOver(completed = false) {
     restartBtn.classList.remove('hidden');
 
    if (window.Android && Android.submitResult) {
-    Android.submitResult("Counting_Game", score, elapsedTime);
+    Android.submitResult("Counting Game", score, elapsedTime);
     console.log("Result submitted to Android:", score, elapsedTime);
 }
 }
